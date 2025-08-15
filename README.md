@@ -19,6 +19,10 @@ The output contains one row per **impression item** with:
 | action_items             | array<int>   | Last 1000 item_ids, newest first, 0 padded |
 | action_types        | array<int>   | Matching action types: 1=click, 2=add_to_cart, 3=order, 0=pad |
 
+Pipeline File - [Pipeline](https://github.com/harkaran215/pyspark-coding-challenge/blob/main/Scripts/Script_Training_Input_Pipeline.py)
+
+Testing File - [Testing](https://github.com/harkaran215/pyspark-coding-challenge/blob/main/Scripts/Script_Testing_Data.py)
+
 
 ## Pipeline Architecture
 
