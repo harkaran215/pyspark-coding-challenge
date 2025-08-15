@@ -1,8 +1,9 @@
 from pyspark.sql import functions as F
-from pyspark.sql import Window
+from pyspark.sql import Window, Row
 from pyspark.sql.types import StructType, StructField, IntegerType, BooleanType, TimestampType, ArrayType, StringType
 from pyspark.sql import SparkSession
 import time 
+from datetime import datetime
 
 def configure_spark_session():
     """Configure Spark session for production workloads"""
@@ -178,3 +179,42 @@ def run_production_pipeline(impressions_df, clicks_df, add_to_carts_df, orders_d
     }
     
     return training_data, metrics
+
+if __name__ == "__main__":
+
+    #starting spark Session
+    spark = configure_spark_session()
+
+    #creating input DataFrame
+    impressions = [
+    Row(dt="2025-08-01", ranking_id="r1", customer_id=1,
+        impressions=[Row(item_id=101, is_order=True),
+                        Row(item_id=102, is_order=False)])
+    ]
+    impressions_df = spark.createDataFrame(impressions)
+
+    # Clicks
+    clicks = [
+        Row(dt="2025-07-31", customer_id=1, item_id=201,
+            click_time=datetime(2025, 7, 31, 10, 0, 0))
+    ]
+    clicks_df = spark.createDataFrame(clicks)
+
+    # ATC
+    add_to_carts = [
+        Row(dt="2025-07-30", customer_id=1, config_id=301,
+            occurred_at=datetime(2025, 7, 30, 9, 0, 0))
+    ]
+    add_to_carts_df = spark.createDataFrame(add_to_carts)
+
+    # Orders
+    orders = [
+        Row(order_date="2025-07-29", customer_id=1, config_id=401,
+            occurred_at=datetime(2025, 7, 29, 8, 0, 0))
+    ]
+    orders_df = spark.createDataFrame(orders)
+
+    #running the pipeline
+    training_data, metrics = run_production_pipeline(impressions_df, clicks_df, add_to_carts_df, orders_df)
+    training_data.show()
+    # print(metrics)
