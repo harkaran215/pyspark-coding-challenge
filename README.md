@@ -85,5 +85,3 @@ The output contains one row per **impression item** with:
 - Check record counts  
 - Validate action sequences  
 
-
-*Note I have developed and tested the code on my Local Machine.
