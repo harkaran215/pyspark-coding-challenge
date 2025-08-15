@@ -144,7 +144,7 @@ def create_training_data(impressions_processed, recent_actions):
         F.col("action_sequence.action_type").alias("action_types")
     ).persist()  # Persist as this is the final output
 
-def run_production_pipeline(impressions_df, clicks_df, add_to_carts_df, orders_df):
+def run_production_pipeline(impressions_df, clicks_df, add_to_carts_df, orders_df, impression_dt=None):
     """End-to-end production pipeline with monitoring"""
     spark = configure_spark_session()
     
