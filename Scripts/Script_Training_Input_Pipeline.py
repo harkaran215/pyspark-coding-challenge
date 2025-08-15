@@ -80,7 +80,7 @@ def get_recent_actions(all_actions, impression_dt=None, max_actions=1000):
     # 4. Group and repartition for balanced output
     return top_actions.groupBy("customer_id").agg(
         F.collect_list(F.struct("item_id", "action_type")).alias("recent_actions")
-    ).repartition("customer_id")  # Adjust based on cluster size  # Optimize for downstream joins
+    ).repartition("customer_id")   # Optimize for downstream joins
 
 def process_impressions(impressions_df):
     """Production-grade impression processing with explosion"""

@@ -1,0 +1,10 @@
+graph LR
+    A[Raw Clicks] --> C[Process Actions]
+    B[Raw Add-to-Carts] --> C
+    D[Raw Orders] --> C
+    C --> E[Filter to 1 Year]
+    E --> F[Get Recent 1000 Actions]
+    G[Raw Impressions] --> H[Explode Impressions]
+    F --> I[Join with Impressions]
+    H --> I
+    I --> J[Final Training Data]
