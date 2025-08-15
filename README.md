@@ -33,54 +33,54 @@ The output contains one row per **impression item** with:
 5. **Join with impressions**: explode impressions to one row per item and attach actions.
 
 ## Performance Notes
-# Performance Optimizations
+### Performance Optimizations
 - **Predicate Pushdown** – Filters data at source using date partitioning  
 - **Smart Repartitioning** – Balances data with `repartition("customer_id")` before window operations  
 - **Broadcast Joins** – Auto-applied for small datasets (<100MB)  
 - **Caching** – Critical intermediate DataFrames like `all_actions` cached  
 
-# Data Quality
+### Data Quality
 - **Schema Enforcement** – Strict type validation at each stage  
 - **Null Handling** – Explicit filtering of invalid records  
 - **Time-Window Guardrails** – Strict 1-year lookback to prevent leaks  
 
-# Scalability
+### Scalability
 - **Skew Mitigation** – Salting for highly active users  
 - **Dynamic Padding** – Sequences padded to fixed length (1000)  
 - **Delta Encoding** – Only stores action deltas in sequences  
 
-# Monitoring
+### Monitoring
 - **Stage Timers** – Tracks processing time per pipeline phase  
 - **Record Counts** – Validates input/output volumes  
 - **Spark UI Integration** – Built-in performance dashboards  
 
-# Output Optimization
+### Output Optimization
 - **File Size Control** – `repartition(200)` before writes  
 - **Column Pruning** – Drops unused fields early  
 - **Sparse Storage** – Compresses zero-padded sequences  
 
 ## Testing Notes
-# Fixtures
+### Fixtures
 - **spark** – Creates a test Spark session  
 - **test_data** – Provides sample DataFrames for all input types  
 
-# Unit Tests
+### Unit Tests
 - Test each function in isolation with mocked data  
 - Verify schemas, counts, and business logic  
 
-# Integration Test
+### Integration Test
 - Tests the full pipeline with sample data  
 - Verifies metrics collection  
 
-# Edge Case Tests
+### Edge Case Tests
 - Empty inputs  
-- Duplicate actions (as specified in the challenge)  
+- Duplicate actions
 
-# Performance Test (Optional)
+### Performance Test
 - Measures execution time  
 - Can be enabled for manual performance testing  
 
-# Assertions
+### Assertions
 - Verify output schemas  
 - Check record counts  
 - Validate action sequences  
