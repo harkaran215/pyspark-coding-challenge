@@ -65,27 +65,27 @@ Testing File - [Testing](https://github.com/harkaran215/pyspark-coding-challenge
 
 
 ## Testing Notes
-# Fixtures
+### Fixtures
 - **spark** – Creates a test Spark session  
 - **test_data** – Provides sample DataFrames for all input types  
 
-# Unit Tests
+### Unit Tests
 - Test each function in isolation with mocked data  
 - Verify schemas, counts, and business logic  
 
-# Integration Test
+### Integration Test
 - Tests the full pipeline with sample data  
 - Verifies metrics collection  
 
-# Edge Case Tests
+### Edge Case Tests
 - Empty inputs  
 - Duplicate actions
 
-# Performance Test (Optional)
+### Performance Test (Optional)
 - Measures execution time  
 - Can be enabled for manual performance testing  
 
-# Assertions
+### Assertions
 - Verify output schemas  
 - Check record counts  
 - Validate action sequences  
