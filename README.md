@@ -64,28 +64,8 @@ Testing File - [Testing](https://github.com/harkaran215/pyspark-coding-challenge
 - **Sparse Storage** – Compresses zero-padded sequences  
 
 ## Testing Notes
-### Fixtures
-- **spark** – Creates a test Spark session  
-- **test_data** – Provides sample DataFrames for all input types  
+- **Structured overview** of all test cases
+- **Input/output schemas** with code samples
+- **Business logic verification** details
 
-### Unit Tests
-- Test each function in isolation with mocked data  
-- Verify schemas, counts, and business logic  
-
-### Integration Test
-- Tests the full pipeline with sample data  
-- Verifies metrics collection  
-
-### Edge Case Tests
-- Empty inputs  
-- Duplicate actions
-
-### Performance Test
-- Measures execution time  
-- Can be enabled for manual performance testing  
-
-### Assertions
-- Verify output schemas  
-- Check record counts  
-- Validate action sequences  
 
