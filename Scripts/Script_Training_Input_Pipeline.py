@@ -155,7 +155,7 @@ def run_production_pipeline(impressions_df, clicks_df, add_to_carts_df, orders_d
     
     # Recent actions with resource monitoring
     recent_start = time.time()
-    recent_actions = get_recent_actions(all_actions)
+    recent_actions = get_recent_actions(all_actions,impression_dt)
     recent_time = time.time() - recent_start
     
     # Impression processing
@@ -186,35 +186,54 @@ if __name__ == "__main__":
     spark = configure_spark_session()
 
     #creating input DataFrame
-    impressions = [
-    Row(dt="2025-08-01", ranking_id="r1", customer_id=1,
-        impressions=[Row(item_id=101, is_order=True),
-                        Row(item_id=102, is_order=False)])
+    clicks_data = [
+        ("2023-01-01", 1, 101, "2023-01-01 10:00:00"),
+        ("2023-01-02", 1, 102, "2023-01-02 11:00:00"),
+        ("2023-01-01", 2, 201, "2023-01-01 09:00:00")
     ]
-    impressions_df = spark.createDataFrame(impressions)
+    clicks_schema = ["dt", "customer_id", "item_id", "click_time"]
+    clicks_df = spark.createDataFrame(clicks_data, clicks_schema)
+    
+    # Sample add_to_carts data
+    add_to_carts_data = [
+        ("2023-01-01", 1, 101, 1, "2023-01-01 12:00:00"),
+        ("2023-01-03", 2, 201, 1, "2023-01-03 10:00:00")
+    ]
+    add_to_carts_schema = ["dt", "customer_id", "config_id", "simple_id", "occurred_at"]
+    add_to_carts_df = spark.createDataFrame(add_to_carts_data, add_to_carts_schema)
+    
+    # Sample orders data
+    orders_data = [
+        ("2023-01-05", 1, 101, 1, "2023-01-05 15:00:00"),
+        ("2023-01-04", 2, 202, 1, "2023-01-04 14:00:00")
+    ]
+    orders_schema = ["order_date", "customer_id", "config_id", "simple_id", "occurred_at"]
+    orders_df = spark.createDataFrame(orders_data, orders_schema)
+    
+    # Sample impressions data
+    impressions_data = [
+        (
+            "2023-01-10", "ranking1", 1,
+            [{"item_id": 101, "is_order": True}, {"item_id": 103, "is_order": False}]
+        ),
+        (
+            "2023-01-10", "ranking2", 2,
+            [{"item_id": 201, "is_order": False}]
+        )
+    ]
+    impressions_schema = StructType([
+        StructField("dt", StringType()),
+        StructField("ranking_id", StringType()),
+        StructField("customer_id", IntegerType()),
+        StructField("impressions", ArrayType(StructType([
+            StructField("item_id", IntegerType()),
+            StructField("is_order", BooleanType())
+        ])))
+    ])
+    impressions_df = spark.createDataFrame(impressions_data, impressions_schema)
 
-    # Clicks
-    clicks = [
-        Row(dt="2025-07-31", customer_id=1, item_id=201,
-            click_time=datetime(2025, 7, 31, 10, 0, 0))
-    ]
-    clicks_df = spark.createDataFrame(clicks)
-
-    # ATC
-    add_to_carts = [
-        Row(dt="2025-07-30", customer_id=1, config_id=301,
-            occurred_at=datetime(2025, 7, 30, 9, 0, 0))
-    ]
-    add_to_carts_df = spark.createDataFrame(add_to_carts)
-
-    # Orders
-    orders = [
-        Row(order_date="2025-07-29", customer_id=1, config_id=401,
-            occurred_at=datetime(2025, 7, 29, 8, 0, 0))
-    ]
-    orders_df = spark.createDataFrame(orders)
 
     #running the pipeline
-    training_data, metrics = run_production_pipeline(impressions_df, clicks_df, add_to_carts_df, orders_df)
+    training_data, metrics = run_production_pipeline(impressions_df, clicks_df, add_to_carts_df, orders_df, "2024-01-01")
     training_data.show()
     # print(metrics)
