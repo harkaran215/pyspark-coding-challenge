@@ -14,7 +14,7 @@ The output contains one row per **impression item** with:
 | dt                  | string       | Impression day (partition key) |
 | customer_id         | long         | Customer id |
 | ranking_id          | string       | Carousel ranking id |
-| impression_item_id  | long         | Item id in impression |
+| impression_item  | long         | Item id in impression |
 | is_order            | int          | 1 if ordered, else 0 |
 | action_items             | array<int>   | Last 1000 item_ids, newest first, 0 padded |
 | action_types        | array<int>   | Matching action types: 1=click, 2=add_to_cart, 3=order, 0=pad |
