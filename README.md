@@ -8,16 +8,58 @@ The output contains one row per **impression item** with:
 - `is_order`
 - The last 1000 **historical actions** for that customer before the impression date (`action_items` and `action_types` arrays).
 
+### Input Data Schemas
+
+#### 1. Impressions
+| Column | Type | Description |
+|--------|------|-------------|
+| `dt` | string | Date partition (YYYY-MM-DD) |
+| `ranking_id` | string | Recommendation batch ID |
+| `customer_id` | long | Unique user identifier |
+| `impressions` | array<struct> | Items shown:<br>`item_id`: long (product ID)<br>`is_order`: boolean (purchased?) |
+
+#### 2. Clicks
+| Column | Type | Description |
+|--------|------|-------------|
+| `dt` | string | Date partition |
+| `customer_id` | long | User identifier |
+| `item_id` | long | Clicked product ID |
+| `click_time` | timestamp | Exact click timestamp |
+
+#### 3. Add-to-Carts
+| Column | Type | Description |
+|--------|------|-------------|
+| `dt` | string | Date partition |
+| `customer_id` | long | User identifier |
+| `config_id` | long | Product ID (same as item_id) |
+| `simple_id` | long | Product variant ID |
+| `occurred_at` | timestamp | When added to cart |
+
+#### 4. Orders
+| Column | Type | Description |
+|--------|------|-------------|
+| `order_date` | string | Date partition |
+| `customer_id` | long | User identifier |
+| `config_id` | long | Product ID (same as item_id) |
+| `simple_id` | long | Product variant ID |
+| `occurred_at` | timestamp | When order was placed |
+
+### Key Relationships
+- **Joins**: All datasets connect via `customer_id`
+- **ID Mapping**: `config_id` = `item_id` across datasets
+- **Time Fields**: Determine action sequence order
+
+
 ## Output Schema
 | Column              | Type          | Description |
 |---------------------|--------------|-------------|
-| dt                  | string       | Impression day (partition key) |
-| customer_id         | long         | Customer id |
-| ranking_id          | string       | Carousel ranking id |
-| impression_item  | long         | Item id in impression |
-| is_order            | int          | 1 if ordered, else 0 |
-| action_items             | array<int>   | Last 1000 item_ids, newest first, 0 padded |
-| action_types        | array<int>   | Matching action types: 1=click, 2=add_to_cart, 3=order, 0=pad |
+| `dt`                  | string       | Impression day (partition key) |
+| `customer_id`         | long         | Customer id |
+| `ranking_id`          | string       | Carousel ranking id |
+| `impression_item`  | long         | Item id in impression |
+| `is_order`            | int          | 1 if ordered, else 0 |
+| `action_items`             | array<int>   | Last 1000 item_ids, 0 padded |
+| `action_types`        | array<int>   | Matching action types: 1=click, 2=add_to_cart, 3=order, 0=pad |
 
 Pipeline File - [Pipeline](https://github.com/harkaran215/pyspark-coding-challenge/blob/main/Scripts/Script_Training_Input_Pipeline.py)
 
@@ -88,6 +130,9 @@ Testing File - [Testing](https://github.com/harkaran215/pyspark-coding-challenge
 ### Assertions
 - Verify output schemas  
 - Check record counts  
-- Validate action sequences  
+- Validate action sequences
+
+## Next Steps
+For the next steps we can write the dataframe into a parquet file partitioned by dt. Then the Data scientist can work with this data to train its model.
 
 
